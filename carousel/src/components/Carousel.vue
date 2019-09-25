@@ -3,16 +3,17 @@
     <h3>Carousel</h3>
     <div class="carousel">
       <ul>
-        <li>
-          <img :src="select.imageUrl" />
+        <li v-for="(item, index) in imgdata" :key="index" :id="'imgWrap'+item.id" 
+		class="imglist"
+		>
+          <img :src="item.imageUrl" />
         </li>
       </ul>
-
-      <input type="button" class="button-prev" @click="moveImgAction('prev')" value="<" />
-      <span>{{select.title}}</span>
-      <input type="button" class="button-next" @click="moveImgAction()" value=">" />
     </div>
 
+	<input type="button" class="button-prev" @click="moveImgAction('prev')" value="<" />
+      <span>{{select.title}}</span>
+      <input type="button" class="button-next" @click="moveImgAction()" value=">" />
     <h3>이미지 삭제</h3>
     <div>
       <label>
@@ -43,6 +44,7 @@ export default {
 		},
 		moveImgAction(key) {
 			let nowindex = this.imgdata.indexOf(this.select);
+			let x = document.querySelector(".carousel").scrollLeft;
 			let changeIndex =
 				key === 'prev' && nowindex - 1 >= 0
 					? nowindex - 1
@@ -53,10 +55,15 @@ export default {
 										nowindex + 1 <= this.imgdata.length - 1
 											? nowindex + 1
 											: 0));
+			let left = changeIndex > nowindex ? x+400 : changeIndex === 0 ? 0 : x-400; 
+			document.querySelector(".carousel").scroll({
+				left: left,  
+      			behavior: 'smooth'});
 			this.init(changeIndex);
+			
 		},
 		delectAction() {
-			const delIndex = this.imgdata.findIndex(img => img.id === this.deleteId);
+			const delIndex = this.imgdata.findIndex(img => img.id == this.deleteId);
 			delIndex > -1 ? this.imgdata.splice(delIndex, 1) : '';
 			this.deleteId = '';
 		},
@@ -65,13 +72,32 @@ export default {
 </script>
 
 <style scoped>
-.carousel {
-	overflow: hidden;
+.carousel{
+	width: 400px;
+	overflow: scroll;
+	-ms-overflow-style: none;
+}
+.carousel::-webkit-scrollbar{
+	display: none;
 }
 .carousel ul {
 	margin: 0;
 	padding: 0;
-	list-style-type: none;
+	width: max-content;
+	height: 300px;
+	overflow: hidden;
 	display: flex;
+}
+.carousel ul li{
+	list-style: none;
+	margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    border : 0;
+    float: left;
+}
+.carousel ul li img{
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
 }
 </style>
