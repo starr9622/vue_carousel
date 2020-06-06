@@ -1,5 +1,8 @@
 # carousel
 
+vue로 만든 간단한 캐러셀입니다.
+이전에 취업 과제로 제출하였었고 데이터는 내부에서 json 파일로 관리합니다.
+
 ## Project setup
 ```
 npm install
